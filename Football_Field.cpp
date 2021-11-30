@@ -1,3 +1,11 @@
+/*
+Author: Shida Yang
+Class: ECE6122
+Last Date Modified: 11/15/2021
+Description:
+	This program defines the Football_Field object
+*/
+
 #include "Football_Field.h"
 
 #define BMP_WIDTH	256.0
@@ -12,9 +20,16 @@
 
 #define TEXTURE_PATH	"ff_c.bmp"
 
+/*
+Purpose: Football_Field constructor, manually fillin vertices, uvs, normals vectors
+Input: N/A
+Output: an Football_Field object
+Return: N/A
+*/
 Football_Field::Football_Field()
 	:Model(glm::scale(glm::mat4(1.0f), glm::vec3(LENGTH, WIDTH, 1.0f)))
 {
+	// fill in vertex array
 	vertices.push_back(glm::vec3(-1.0f, 1.0f, 0.0f));
 	vertices.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
 	vertices.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
@@ -22,6 +37,7 @@ Football_Field::Football_Field()
 	vertices.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
 	vertices.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 
+	// UV array
 	uvs.push_back(glm::vec2(FF_X_MIN / BMP_LENGTH, 1 - FF_Y_MIN / BMP_WIDTH));
 	uvs.push_back(glm::vec2(FF_X_MAX / BMP_LENGTH, 1 - FF_Y_MIN / BMP_WIDTH));
 	uvs.push_back(glm::vec2(FF_X_MAX / BMP_LENGTH, 1 - FF_Y_MAX / BMP_WIDTH));
@@ -29,6 +45,7 @@ Football_Field::Football_Field()
 	uvs.push_back(glm::vec2(FF_X_MAX / BMP_LENGTH, 1 - FF_Y_MAX / BMP_WIDTH));
 	uvs.push_back(glm::vec2(FF_X_MIN / BMP_LENGTH, 1 - FF_Y_MAX / BMP_WIDTH));
 
+	// normal array
 	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -36,16 +53,37 @@ Football_Field::Football_Field()
 	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 	normals.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
 
+	// load texture
 	texture = loadBMP_custom(TEXTURE_PATH);
 }
 
-void Football_Field::draw(const glm::mat4& Projection, const glm::mat4& View, const GLuint& MatrixID, const GLuint& TextureID, const GLuint& vertexbuffer, const GLuint& uvbuffer, const GLuint& normalbuffer, const GLuint &ViewMatrixID, const GLuint &ModelMatrixID)
+/*
+Purpose: draw the Football_Field using openGL
+Input:
+	const glm::mat4& Projection: projection matrix
+	const glm::mat4& View: view matrix
+	const GLuint& MatrixID: MVP matric ID in openGL shader
+	const GLuint& TextureID: texture ID in openGL shader
+	const GLuint& vertexbuffer: vertex buffer in openGL shader
+	const GLuint& uvbuffer: : uv buffer in openGL shader
+	const GLuint& normalbuffer: normal buffer in openGL shader
+	const GLuint& ViewMatrixID: view matric ID in openGL shader
+	const GLuint& ModelMatrixID: model matric ID in openGL shader
+	const GLuint& useColorID: useColor uniform ID in openGL shader
+	const GLuint& colorIntensityID: colorIntensity uniform ID in openGL shader
+Output: N/A
+Return: N/A
+*/
+void Football_Field::draw(const glm::mat4& Projection, const glm::mat4& View, const GLuint& MatrixID, const GLuint& TextureID, const GLuint& vertexbuffer, const GLuint& uvbuffer, const GLuint& normalbuffer, const GLuint &ViewMatrixID, const GLuint &ModelMatrixID, const GLuint& useColorID, const GLuint& colorIntensityID)
 {
 	// calculate MVP and send it to shader
 	glm::mat4 MVP = Projection * View * Model;
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 	glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &View[0][0]);
 	glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &Model[0][0]);
+
+	glUniform1i(useColorID, false);
+	glUniform1f(colorIntensityID, 1);
 
 	// send vertex, uv and normal data
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -102,5 +140,6 @@ void Football_Field::draw(const glm::mat4& Projection, const glm::mat4& View, co
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 
 }

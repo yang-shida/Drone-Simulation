@@ -148,6 +148,7 @@
     <ClCompile Include="ECE_UAV.cpp" />
     <ClCompile Include="Football_Field.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\objloader.hpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="common\texture.hpp" />
     <ClInclude Include="ECE_UAV.h" />
     <ClInclude Include="Football_Field.h" />
+    <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.fragmentshader" />
