@@ -56,6 +56,8 @@ ECE_UAV* firstUAV;
 // animation start time
 double startTime = 0;
 
+bool earlyStop = false;
+
 // gravity vector
 glm::vec3 gVector(0, 0, -GRAVITY_ACCEL);
 
@@ -285,14 +287,19 @@ int main()
 			
 			// handle other events (like keyboard press)
 			glfwPollEvents();
-		} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-			glfwWindowShouldClose(window) == 0);
+
+			if (!(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0))
+				earlyStop = true;
+
+		} while (!earlyStop);
 	}
 	catch (string msg)
 	{
 		// goes here is unable to load obj file for UAV
 		cout << msg << endl;
 	}
+
+	while (finishCount < 15);
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
@@ -343,7 +350,7 @@ void threadFunction(ECE_UAV* pUAV)
 	float fs = 0;
 
 	// update position, velocity, acceleration every 10ms
-	while (true)
+	while (!earlyStop)
 	{
 		// wait 10ms
 		timeDiff = 0;
@@ -556,6 +563,11 @@ void threadFunction(ECE_UAV* pUAV)
 			return;
 		}
 		}
+	}
+	if (earlyStop)
+	{
+		lock_guard<mutex> lck(finishCountMtx);
+		finishCount++;
 	}
 }
 
