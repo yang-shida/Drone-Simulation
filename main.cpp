@@ -39,6 +39,8 @@ GLFWwindow* window;
 
 #define NUM_OF_UAVS	15
 
+uint32_t countx = 0;
+
 void threadFunction(ECE_UAV* pUAV);
 const glm::vec3 getMaxAccelerationAlongDirection(glm::vec3& direction, glm::vec3& resistingVector);
 
@@ -273,11 +275,26 @@ int main()
 						// if distance too close (less than 0.01m = 1cm), swap velocity
 						if (glm::distance(UAVs[i].getPosition(), UAVs[j].getPosition()) <= (0.01 + 2 * UVA_SIZE))
 						{
-							glm::vec3 tempVelocityi = UAVs[i].getVelocity();
-							glm::vec3 tempVelocityj = UAVs[j].getVelocity();
-							UAVs[i].setVelocity(tempVelocityj);
-							UAVs[j].setVelocity(tempVelocityi);
-							//cout << "Collision! Location: (" << UAVs[i].getPosition().x << ", " << UAVs[i].getPosition().y << ", " << UAVs[i].getPosition().z << ")" << endl;
+							// check if approaching
+							if (UAVs[i].getPosition().x < UAVs[j].getPosition().x && UAVs[i].getVelocity().x > 0 && UAVs[j].getVelocity().x < 0 ||
+								UAVs[i].getPosition().x > UAVs[j].getPosition().x && UAVs[i].getVelocity().x < 0 && UAVs[j].getVelocity().x > 0 ||
+								UAVs[i].getPosition().y < UAVs[j].getPosition().y && UAVs[i].getVelocity().y > 0 && UAVs[j].getVelocity().y < 0 ||
+								UAVs[i].getPosition().y > UAVs[j].getPosition().y && UAVs[i].getVelocity().y < 0 && UAVs[j].getVelocity().y > 0 ||
+								UAVs[i].getPosition().z < UAVs[j].getPosition().z && UAVs[i].getVelocity().z > 0 && UAVs[j].getVelocity().z < 0 ||
+								UAVs[i].getPosition().z > UAVs[j].getPosition().z && UAVs[i].getVelocity().z < 0 && UAVs[j].getVelocity().z > 0
+								) 
+							{
+								glm::vec3 tempVelocityi = UAVs[i].getVelocity();
+								glm::vec3 tempVelocityj = UAVs[j].getVelocity();
+								UAVs[i].setVelocity(tempVelocityj);
+								UAVs[j].setVelocity(tempVelocityi);
+								//cout << "Collision! Location: (" << UAVs[i].getPosition().x << ", " << UAVs[i].getPosition().y << ", " << UAVs[i].getPosition().z << ")" << endl;
+							}
+							else
+							{
+								cout << (countx++) << "check\n";
+							}
+							
 						}
 					}
 				}
