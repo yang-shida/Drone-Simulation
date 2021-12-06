@@ -290,10 +290,6 @@ int main()
 								UAVs[j].setVelocity(tempVelocityi);
 								//cout << "Collision! Location: (" << UAVs[i].getPosition().x << ", " << UAVs[i].getPosition().y << ", " << UAVs[i].getPosition().z << ")" << endl;
 							}
-							else
-							{
-								cout << (countx++) << "check\n";
-							}
 							
 						}
 					}
