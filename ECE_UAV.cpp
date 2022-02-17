@@ -2,12 +2,6 @@
 Author: Shida Yang
 Class: ECE6122
 Last Date Modified: 11/15/2021
-
-
-this is a test
-
-
-
 Description:
 	This program defines the ECE_UAV object
 */
